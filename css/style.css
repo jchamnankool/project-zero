@@ -1,0 +1,20 @@
+#board {
+  width: 600px;
+  height: 600px;
+  margin: 0 auto;
+}
+
+td {
+  border: 1px solid black;
+  height: 50px;
+  width: 50px;
+}
+
+.cross {
+  background-color:plum;
+}
+
+.circle {
+  background-color: palevioletred;
+}
+
