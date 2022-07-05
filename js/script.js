@@ -56,6 +56,7 @@ $("document").ready(function () {
     const turn = function (cellID, player) {
         originalBoard[cellID] = player;
         $(`#${cellID}`).text(player);
+        $(`#${cellID}`).css("cursor", "not-allowed");
 
         let gameWon = checkWin(originalBoard, player);
         if (gameWon) gameOver(gameWon);
