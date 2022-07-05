@@ -1,20 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+
+body {
+  font-family: 'Varela Round', sans-serif;
+  text-align: center;
+}
+
+/* setup for game board */
 #board {
-  width: 600px;
-  height: 600px;
+  border-collapse: collapse;
   margin: 0 auto;
+  font-family: 'Dongle', sans-serif;
+  font-size: 120px;
 }
 
 td {
-  border: 1px solid black;
-  height: 50px;
-  width: 50px;
+  border: 3px solid black;
+  width: 200px;
+  height: 200px;
+  vertical-align: middle;
+  cursor: pointer;
 }
 
-.cross {
-  background-color:plum;
+table tr:first-child td {
+  border-top: 0;
 }
 
-.circle {
-  background-color: palevioletred;
+table tr:last-child td {
+  border-bottom: 0;
 }
 
+table tr td:first-child {
+  border-left: 0;
+}
+
+table tr td:last-child {
+  border-right: 0;
+}
+/* end setup for game board */
+
+.endResult {
+  display: none;
+  font-size: 100px;
+}
