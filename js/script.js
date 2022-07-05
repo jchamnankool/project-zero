@@ -19,13 +19,12 @@ $("document").ready(function () {
     const cells = $(".cell");
 
     const startGame = function () {
-        $(".endResult").attr("display", "none");
+        $(".endResult").css("display", "none");
         //create an array of numbers from 0-8
         originalBoard = Array.from(Array(9).keys());
         //clear board
         cells.each(function () {
-            $(this).text("");
-            $(this).on("click", turnClick);
+            $(this).text("").on("click", turnClick).css("background-color", "white");
         });
     };
 
