@@ -55,8 +55,7 @@ $("document").ready(function () {
     
     const turn = function (cellID, player) {
         originalBoard[cellID] = player;
-        $(`#${cellID}`).text(player);
-        $(`#${cellID}`).css("cursor", "not-allowed");
+        $(`#${cellID}`).text(player).css("cursor", "not-allowed");
 
         let gameWon = checkWin(originalBoard, player);
         if (gameWon) gameOver(gameWon);
@@ -138,7 +137,7 @@ $("document").ready(function () {
         //every square filled up and no win
         if (emptySquares().length === 0) {
             cells.each(function () {
-                $(this).css("background-color", "grey");
+                $(this).css("background-color", "lightgrey");
             });
             declareWinner("It's a draw!");
             return true;

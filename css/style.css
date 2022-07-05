@@ -9,7 +9,7 @@ body {
 /* setup for game board */
 #board {
   border-collapse: collapse;
-  margin: 0 auto;
+  margin: 50px auto;
   font-family: 'Dongle', sans-serif;
   font-size: 120px;
 }
@@ -41,5 +41,5 @@ table tr td:last-child {
 
 .endResult {
   display: none;
-  font-size: 100px;
+  font-size: 72px;
 }
