@@ -24,7 +24,13 @@ $("document").ready(function () {
         originalBoard = Array.from(Array(9).keys());
         //clear board
         cells.each(function () {
-            $(this).text("").on("click", turnClick).css("background-color", "white");
+            $(this)
+            .text("")
+            .on("click", turnClick)
+            .css({
+                "background-color": "white",
+                "cursor": "pointer"
+            });
         });
     };
 
@@ -123,10 +129,6 @@ $("document").ready(function () {
         return moves[bestMove];
     }
 
-    // const bestSpot = function () {
-    //     return minimax(originalBoard, AI).index;
-    // };
-
     const declareWinner = function (winner) {
         $(".endResult").text(winner).css("display", "block");
     };
@@ -135,7 +137,7 @@ $("document").ready(function () {
         //every square filled up and no win
         if (emptySquares().length === 0) {
             cells.each(function () {
-                $(this).css("background-color", "pink");
+                $(this).css("background-color", "grey");
             });
             declareWinner("It's a draw!");
             return true;
