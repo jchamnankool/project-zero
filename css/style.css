@@ -32,10 +32,10 @@ h1 {
   display: none;
   /* display: block; */
   width: 650px;
-  height: 240px;
+  height: auto;
   position: absolute;
-  top:40%;
-  left:50%;
+  top: 40%;
+  left: 50%;
   margin:-120px 0 0 -325px;
   z-index: 1;
   text-align: center;
@@ -51,6 +51,7 @@ h1 {
 .dialogBtn {
   font-size: 18px;
   padding: 10px;
+  margin-bottom: 40px;
 }
 
 /* setup for game board */
@@ -121,5 +122,3 @@ button.smallBtn {
   font-size: 24px;
   margin: 0 12px;
 }
-
-

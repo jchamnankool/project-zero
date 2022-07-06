@@ -31,6 +31,12 @@ $("document").ready(function () {
         startGame();
     }
 
+    //TODO keep score
+    let human = "X";
+    let human2 = "O";
+    let AI = "O";
+    let currentPlayer = human;
+
     $("#chooseFriendBtn").on("click", chooseFriend);
     $("#chooseAIBtn").on("click", chooseAI);
     $("#sufferBtn").on("click", function () {
@@ -51,13 +57,6 @@ $("document").ready(function () {
     $("#return").on("click", returnHome);
     
     let originalBoard;
-    //TODO give player choice to be X or O when playing against AI
-    //TODO keep score
-    const human = "X";
-    const human2 = "O";
-    const AI = "O";
-    let currentPlayer = human;
-
     const winningCombos = [
         //winning across
         [0, 1, 2],
@@ -75,13 +74,13 @@ $("document").ready(function () {
     const cells = $(".cell");
 
     const startGame = function () {
-        currentPlayer = human;
+        $("#replay").prop("disabled", true);
         if (gameMode === "Friend") {
+            currentPlayer = human;
             $("h1").text("Tic - Tac - Toe vs a Friend");
         } else {
             $("h1").text("Tic - Tac - Toe vs an Unbeatable AI");
         }
-        $(".endResult").css("display", "none");
         //create an array of numbers from 0-8
         originalBoard = Array.from(Array(9).keys());
         //clear board
@@ -216,15 +215,15 @@ $("document").ready(function () {
 
     const turnClick = function (cell) {
         if (typeof originalBoard[cell.target.id] == "number") {
+            turn(cell.target.id, currentPlayer);
+
             if (gameMode === "Friend") {
-                console.log(emptySquares().length);
-                turn(cell.target.id, currentPlayer);
                 //check for draw before play
                 if (!checkWin(originalBoard, currentPlayer) && !checkTie()) turn(cell.target.id, currentPlayer);
                 //swap players
                 currentPlayer = currentPlayer == human ? human2 : human;
             } else {
-                turn(cell.target.id, human);
+                //turn(cell.target.id, human);
                 //check for draw before play
                 if (!checkWin(originalBoard, human) && !checkTie()) turn((minimax(originalBoard, AI).index), AI);
             }
