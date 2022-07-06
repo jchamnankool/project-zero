@@ -14,22 +14,34 @@ $("document").ready(function () {
         $(".smallBtn").hide();
     }
 
-    const playFriend = function() {
+    const chooseFriend = function() {
         gameMode = "Friend";
         showGame();
         startGame();
     }
 
+    const chooseAI = function () {
+        $(".overlay").show();
+        $("#dialogConfirm").css("display", "block");
+    }
+
     const playAI = function () {
-        //TODO fix this
-        //$("#dialogConfirm").css("display", "block");
         gameMode = "AI";
         showGame();
         startGame();
     }
 
-    $("#playFriendBtn").on("click", playFriend);
-    $("#playAIBtn").on("click", playAI);
+    $("#chooseFriendBtn").on("click", chooseFriend);
+    $("#chooseAIBtn").on("click", chooseAI);
+    $("#sufferBtn").on("click", function () {
+        $("#dialogConfirm").css("display", "none");
+        $(".overlay").hide();
+        playAI();
+    });
+    $("#nvmBtn").on("click", function () {
+        $("#dialogConfirm").css("display", "none");
+        $(".overlay").hide();
+    });
 
     const returnHome = function () {
         gameMode = "";
