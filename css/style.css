@@ -64,7 +64,7 @@ h1 {
 /* setup for game board */
 #board {
   border-collapse: collapse;
-  margin: 50px auto;
+  margin: 32px auto;
   font-family: 'Dongle', sans-serif;
   font-size: 120px;
   /* only initially invisible */

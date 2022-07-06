@@ -219,6 +219,7 @@ $("document").ready(function () {
             $("#scoreInfo").text(`${$scoreText} Draw`);
         }
         $("#scoreInfo").show();
+        $("#replay").text("Next Round");
     };
 
     const checkTie = function () {
@@ -256,6 +257,7 @@ $("document").ready(function () {
         } else {
             $("#replay").prop("disabled", false);
             $("#replay").on("click", function () {
+                $("#replay").text("Replay");
                 startGame();
             });
         }
