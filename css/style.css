@@ -1,9 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Oleo+Script+Swash+Caps&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Dongle:wght@700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
 
 body {
+  background-color: #231B42; 
   font-family: 'Varela Round', sans-serif;
   text-align: center;
+  color: #fff;
+  margin: 0 auto;
+}
+
+h1 {
+  color: #fff;
+  font-size: 48px;
+  font-family: 'Oleo Script Swash Caps', cursive;
+  text-transform: lowercase;
+  padding: 16px;
 }
 
 /* setup for game board */
@@ -12,13 +24,15 @@ body {
   margin: 50px auto;
   font-family: 'Dongle', sans-serif;
   font-size: 120px;
+  /* only initially invisible */
+  display: none;
 }
 
 td {
-  border: 3px solid black;
+  border: 3px solid #F97992;
+  vertical-align: middle;
   width: 200px;
   height: 200px;
-  vertical-align: middle;
   cursor: pointer;
 }
 
@@ -43,3 +57,38 @@ table tr td:last-child {
   display: none;
   font-size: 72px;
 }
+
+button { 
+  background-color: #F97992;
+  color: #fff;
+  font-family: 'Varela Round', sans-serif;
+}
+
+button:disabled {
+  background-color: grey;
+  color: #929292;
+  cursor: not-allowed;
+}
+
+button:hover:enabled {
+  background-color: #F890A5;
+  font-style: italic;
+}
+
+button.gameModeBtn {
+  display: block;
+  width: 600px;
+  height: 150px;
+  font-size: 48px;
+  margin: 24px auto;
+}
+
+button.smallBtn {
+  display: none;
+  width: 300px;
+  height: 80px;
+  font-size: 24px;
+  margin: 0 12px;
+}
+
+

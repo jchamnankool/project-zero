@@ -9,7 +9,14 @@
     <script src="js/script.js"></script>
   </head>
   <body>
-    <h1>hehe</h1>
+    <h1>Tic - Tac - Toe</h1>
+    <div class="choices">
+      <h2>Choose a game mode:</h2>
+
+      <button id="playFriendBtn" class="gameModeBtn">Play against a friend</button>
+      <button id="playAIBtn" class="gameModeBtn">Play against AI</button>
+    </div>
+
     <table id="board">
       <tr>
         <td id="0" class="cell"></td>
@@ -30,6 +37,7 @@
 
     <div class="endResult"></div>
 
-    <button id="#replay" disabled>Replay</button>
+    <button id="replay" class="smallBtn" disabled>Replay</button>
+    <button id="return" class="smallBtn">Back to Home</button>
   </body>
 </html>

@@ -1,8 +1,47 @@
 $("document").ready(function () {
+    let gameMode = null;
+
+    const showGame = function () {
+        $(".choices").hide();
+        $("#board").show();
+        $(".smallBtn").show();
+    }
+
+    const hideGame = function () {
+        $(".choices").show();
+        $("#board").hide();
+        $(".smallBtn").hide();
+    }
+
+    const playFriend = function() {
+        gameMode = "Friend";
+        console.log(gameMode);
+        alert("Coming soon!");
+    }
+
+    const playAI = function () {
+        gameMode = "AI";
+        console.log(gameMode);
+        showGame();
+        startGame();
+    }
+
+    $("#playFriendBtn").on("click", playFriend);
+    $("#playAIBtn").on("click", playAI);
+
+    const returnHome = function () {
+        gameMode = null;
+        hideGame();
+    }
+
+    $("#return").on("click", returnHome);
+    
     let originalBoard;
-    //TODO implement option for player to choose to be X or O
+    //TODO give player choice to be X or O when playing against AI
     const human = "X";
+    const human2 = "O";
     const AI = "O";
+
     const winningCombos = [
         //winning across
         [0, 1, 2],
@@ -19,6 +58,7 @@ $("document").ready(function () {
     const cells = $(".cell");
 
     const startGame = function () {
+        $("h1").text("Tic - Tac - Toe");
         $(".endResult").css("display", "none");
         //create an array of numbers from 0-8
         originalBoard = Array.from(Array(9).keys());
@@ -28,7 +68,7 @@ $("document").ready(function () {
             .text("")
             .on("click", turnClick)
             .css({
-                "background-color": "white",
+                "background-color": "#231B42",
                 "cursor": "pointer"
             });
         });
@@ -62,7 +102,7 @@ $("document").ready(function () {
     };
 
     const gameOver = function (gameWon) {
-        const winningColor = gameWon.player === human ? "#AFE1AF" : "#FF5733";
+        const winningColor = gameWon.player === human ? "#C6D8C0" : "#F63258";
         for (let index of winningCombos[gameWon.index]) {
             $(`#${index}`).css("background-color", winningColor);
         }
@@ -130,14 +170,14 @@ $("document").ready(function () {
     }
 
     const declareWinner = function (winner) {
-        $(".endResult").text(winner).css("display", "block");
+        $("h1").text(winner).css("display", "block");
     };
 
     const checkTie = function () {
         //every square filled up and no win
         if (emptySquares().length === 0) {
             cells.each(function () {
-                $(this).css("background-color", "lightgrey");
+                $(this).css("background-color", "#3b3161");
             });
             declareWinner("It's a draw!");
             return true;
@@ -153,13 +193,11 @@ $("document").ready(function () {
             if (!checkWin(originalBoard, human) && !checkTie()) turn((minimax(originalBoard, AI).index), AI);
         }
 
-        $("button").prop("disabled", false);
-        $("button").on("click", function () {
+        $("#replay").prop("disabled", false);
+        $("#replay").on("click", function () {
             startGame();
         });
     };
-
-    startGame();
 });
 
 /* notes
