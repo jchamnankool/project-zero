@@ -54,6 +54,13 @@ h1 {
   margin-bottom: 40px;
 }
 
+#scoreInfo {
+  display: none;
+  font-family: 'Oleo Script Swash Caps', cursive;
+  font-size: 24px;
+  word-spacing: 24px;
+}
+
 /* setup for game board */
 #board {
   border-collapse: collapse;
@@ -70,6 +77,10 @@ td {
   width: 200px;
   height: 200px;
   cursor: pointer;
+}
+
+td:hover {
+  background-color: #fc8ea4;
 }
 
 table tr:first-child td {
@@ -117,8 +128,8 @@ button.gameModeBtn {
 
 button.smallBtn {
   display: none;
-  width: 300px;
-  height: 80px;
-  font-size: 24px;
-  margin: 0 12px;
+  width: 200px;
+  height: 32px;
+  font-size: 18px;
+  margin: 24px 12px;
 }

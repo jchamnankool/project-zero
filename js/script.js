@@ -31,10 +31,14 @@ $("document").ready(function () {
         startGame();
     }
 
-    //TODO keep score
+    //TODO keep score, best out of 3
+    //TODO add hover of piece
     let human = "X";
+    let humanNumWins = 0;
     let human2 = "O";
+    let human2NumWins = 0;
     let AI = "O";
+    let AINumWins = 0;
     let currentPlayer = human;
 
     $("#chooseFriendBtn").on("click", chooseFriend);
@@ -50,8 +54,7 @@ $("document").ready(function () {
     });
 
     const returnHome = function () {
-        gameMode = "";
-        hideGame();
+        location.reload();
     }
 
     $("#return").on("click", returnHome);
@@ -77,9 +80,9 @@ $("document").ready(function () {
         $("#replay").prop("disabled", true);
         if (gameMode === "Friend") {
             currentPlayer = human;
-            $("h1").text("Tic - Tac - Toe vs a Friend");
+            $("h1").text("Tic -Tac-Toe vs a Friend");
         } else {
-            $("h1").text("Tic - Tac - Toe vs an Unbeatable AI");
+            $("h1").text("Tic-Tac-Toe vs an Unbeatable AI");
         }
         //create an array of numbers from 0-8
         originalBoard = Array.from(Array(9).keys());
@@ -135,7 +138,6 @@ $("document").ready(function () {
 
         if (gameMode === "Friend") {
             declareWinner(gameWon.player === human ? "★ Player 1 wins! ★" : "★ Player 2 wins! ★");
-
         } else {
             declareWinner(gameWon.player === human ? "★ You win! ★" : "★ You lose! ★");
         }
@@ -196,8 +198,27 @@ $("document").ready(function () {
         return moves[bestMove];
     }
 
-    const declareWinner = function (winner) {
-        $("h1").text(winner).css("display", "block");
+    const declareWinner = function (winningMessage) {
+        $("h1").text(winningMessage).css("display", "block");
+        //let $newImage = $("<img>");
+        let $scoreText = $("#scoreInfo").text();
+        if (winningMessage === "★ Player 1 wins! ★") {
+            //$newImage.src = "/images/p1.png";
+            humanNumWins++;
+            $("#scoreInfo").text(`${$scoreText} P1`);
+        } else if (winningMessage === "★ Player 2 wins! ★") {
+            //$newImage.src = "/images/p2.png";
+            human2NumWins++;
+            $("#scoreInfo").text(`${$scoreText} P2`);
+        } else if (winningMessage === "★ You lose! ★") {
+            //$newImage.src = "/images/ai.png";
+            AINumWins++;
+            $("#scoreInfo").text(`${$scoreText} AI`);
+        } else {
+            //$newImage.src = "/images/handshake.png";
+            $("#scoreInfo").text(`${$scoreText} Draw`);
+        }
+        $("#scoreInfo").show();
     };
 
     const checkTie = function () {
@@ -229,10 +250,15 @@ $("document").ready(function () {
             }
         }
 
-        $("#replay").prop("disabled", false);
-        $("#replay").on("click", function () {
-            startGame();
-        });
+        if (humanNumWins === 2 || human2NumWins === 2 || AINumWins === 2) {
+            $("#replay").prop("disabled", true);
+            $("#scoreInfo").text("Best of 3 reached!");
+        } else {
+            $("#replay").prop("disabled", false);
+            $("#replay").on("click", function () {
+                startGame();
+            });
+        }
     };
 });
 
