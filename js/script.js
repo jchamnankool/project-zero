@@ -16,7 +16,8 @@ $("document").ready(function () {
     const playFriend = function() {
         gameMode = "Friend";
         console.log(gameMode);
-        alert("Coming soon!");
+        showGame();
+        startGame();
     }
 
     const playAI = function () {
@@ -41,6 +42,7 @@ $("document").ready(function () {
     const human = "X";
     const human2 = "O";
     const AI = "O";
+    let currentPlayer = human;
 
     const winningCombos = [
         //winning across
@@ -55,9 +57,11 @@ $("document").ready(function () {
         [0, 4, 8],
         [6, 4, 2]
     ];
+    //cells in the game board
     const cells = $(".cell");
 
     const startGame = function () {
+        currentPlayer = human;
         $("h1").text("Tic - Tac - Toe");
         $(".endResult").css("display", "none");
         //create an array of numbers from 0-8
@@ -102,7 +106,7 @@ $("document").ready(function () {
     };
 
     const gameOver = function (gameWon) {
-        const winningColor = gameWon.player === human ? "#C6D8C0" : "#F63258";
+        const winningColor = gameWon.player === human||human2 ? "#C6D8C0" : "#F63258";
         for (let index of winningCombos[gameWon.index]) {
             $(`#${index}`).css("background-color", winningColor);
         }
@@ -111,7 +115,12 @@ $("document").ready(function () {
             $(this).off("click", turnClick).css("cursor", "not-allowed");
         });
 
-        declareWinner(gameWon.player === human ? "You win!" : "You lose!");
+        if (gameMode === "Friend") {
+            declareWinner(gameWon.player === human ? "Player 1 wins!" : "Player 2 wins!");
+
+        } else {
+            declareWinner(gameWon.player === human ? "You win!" : "You lose!");
+        }
     }
 
     const emptySquares = function () {
@@ -188,9 +197,18 @@ $("document").ready(function () {
 
     const turnClick = function (cell) {
         if (typeof originalBoard[cell.target.id] == "number") {
-            turn(cell.target.id, human);
-            //check for draw before play
-            if (!checkWin(originalBoard, human) && !checkTie()) turn((minimax(originalBoard, AI).index), AI);
+            if (gameMode === "Friend") {
+                console.log(emptySquares().length);
+                turn(cell.target.id, currentPlayer);
+                //check for draw before play
+                if (!checkWin(originalBoard, currentPlayer) && !checkTie()) turn(cell.target.id, currentPlayer);
+                //swap players
+                currentPlayer = currentPlayer == human ? human2 : human;
+            } else {
+                turn(cell.target.id, human);
+                //check for draw before play
+                if (!checkWin(originalBoard, human) && !checkTie()) turn((minimax(originalBoard, AI).index), AI);
+            }
         }
 
         $("#replay").prop("disabled", false);
