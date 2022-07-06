@@ -18,6 +18,19 @@ h1 {
   padding: 16px;
 }
 
+#dialogConfirm {
+  display: none;
+  width: 400px;
+  position: relative;
+  margin: 0 auto;
+  z-index: 1;
+  padding: 48px;
+  text-align: center;
+  font-size: 24px;
+  background-color: #F97992;
+  border: 2px solid #231B42;
+}
+
 /* setup for game board */
 #board {
   border-collapse: collapse;
@@ -52,11 +65,6 @@ table tr td:last-child {
   border-right: 0;
 }
 /* end setup for game board */
-
-.endResult {
-  display: none;
-  font-size: 72px;
-}
 
 button { 
   background-color: #F97992;

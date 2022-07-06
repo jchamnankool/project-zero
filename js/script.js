@@ -1,5 +1,5 @@
 $("document").ready(function () {
-    let gameMode = null;
+    let gameMode = "";
 
     const showGame = function () {
         $(".choices").hide();
@@ -8,6 +8,7 @@ $("document").ready(function () {
     }
 
     const hideGame = function () {
+        $("h1").text("Tic - Tac - Toe");
         $(".choices").show();
         $("#board").hide();
         $(".smallBtn").hide();
@@ -15,14 +16,14 @@ $("document").ready(function () {
 
     const playFriend = function() {
         gameMode = "Friend";
-        console.log(gameMode);
         showGame();
         startGame();
     }
 
     const playAI = function () {
+        //TODO fix this
+        //$("#dialogConfirm").css("display", "block");
         gameMode = "AI";
-        console.log(gameMode);
         showGame();
         startGame();
     }
@@ -31,7 +32,7 @@ $("document").ready(function () {
     $("#playAIBtn").on("click", playAI);
 
     const returnHome = function () {
-        gameMode = null;
+        gameMode = "";
         hideGame();
     }
 
@@ -39,6 +40,7 @@ $("document").ready(function () {
     
     let originalBoard;
     //TODO give player choice to be X or O when playing against AI
+    //TODO keep score
     const human = "X";
     const human2 = "O";
     const AI = "O";
@@ -62,7 +64,11 @@ $("document").ready(function () {
 
     const startGame = function () {
         currentPlayer = human;
-        $("h1").text("Tic - Tac - Toe");
+        if (gameMode === "Friend") {
+            $("h1").text("Tic - Tac - Toe vs a Friend");
+        } else {
+            $("h1").text("Tic - Tac - Toe vs an Unbeatable AI");
+        }
         $(".endResult").css("display", "none");
         //create an array of numbers from 0-8
         originalBoard = Array.from(Array(9).keys());
@@ -106,7 +112,8 @@ $("document").ready(function () {
     };
 
     const gameOver = function (gameWon) {
-        const winningColor = gameWon.player === human||human2 ? "#C6D8C0" : "#F63258";
+        console.log(currentPlayer);
+        const winningColor = gameWon.player === human||human2&&gameMode!=="AI" ? "#C6D8C0" : "#F63258";
         for (let index of winningCombos[gameWon.index]) {
             $(`#${index}`).css("background-color", winningColor);
         }
@@ -116,10 +123,10 @@ $("document").ready(function () {
         });
 
         if (gameMode === "Friend") {
-            declareWinner(gameWon.player === human ? "Player 1 wins!" : "Player 2 wins!");
+            declareWinner(gameWon.player === human ? "★ Player 1 wins! ★" : "★ Player 2 wins! ★");
 
         } else {
-            declareWinner(gameWon.player === human ? "You win!" : "You lose!");
+            declareWinner(gameWon.player === human ? "★ You win! ★" : "★ You lose! ★");
         }
     }
 
