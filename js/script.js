@@ -1,22 +1,14 @@
 $("document").ready(function () {
+    //setup -------------------------------------------------------------------------------------------------------------
     let gameMode = "";
-
     const showGame = function () {
         $(".choices").hide();
         $("#board").show();
         $(".smallBtn").show();
     }
 
-    const hideGame = function () {
-        $("h1").text("Tic - Tac - Toe");
-        $(".choices").show();
-        $("#board").hide();
-        $(".smallBtn").hide();
-    }
-
     const chooseFriend = function() {
         gameMode = "Friend";
-        showGame();
         startGame();
     }
 
@@ -27,12 +19,9 @@ $("document").ready(function () {
 
     const playAI = function () {
         gameMode = "AI";
-        showGame();
         startGame();
     }
 
-    //TODO keep score, best out of 3
-    //TODO add hover of piece
     let human = "X";
     let humanNumWins = 0;
     let human2 = "O";
@@ -41,22 +30,26 @@ $("document").ready(function () {
     let AINumWins = 0;
     let currentPlayer = human;
 
+    //game mode buttons
     $("#chooseFriendBtn").on("click", chooseFriend);
     $("#chooseAIBtn").on("click", chooseAI);
-    $("#sufferBtn").on("click", function () {
+    //AI dialog prompt stuff
+    const closeDialog = function () {
         $("#dialogConfirm").css("display", "none");
         $(".overlay").hide();
+    }
+    $("#sufferBtn").on("click", function () {
+        closeDialog();
         playAI();
     });
     $("#nvmBtn").on("click", function () {
-        $("#dialogConfirm").css("display", "none");
-        $(".overlay").hide();
+        closeDialog();
     });
 
+    //ahahaha...
     const returnHome = function () {
         location.reload();
     }
-
     $("#return").on("click", returnHome);
     
     let originalBoard;
@@ -76,7 +69,9 @@ $("document").ready(function () {
     //cells in the game board
     const cells = $(".cell");
 
+    //actual code for the game -------------------------------------------------------------------------------------------
     const startGame = function () {
+        showGame();
         $("#replay").prop("disabled", true);
         if (gameMode === "Friend") {
             currentPlayer = human;
@@ -102,7 +97,6 @@ $("document").ready(function () {
         //find every index player has played in
         let plays = board.reduce((moves, user, cellID) => 
             (user === player) ? moves.concat(cellID) : moves, []);
-            //console.log(plays);        
         let gameWon = null;
         for (let [index, win] of winningCombos.entries()) { //i.e. 0, [0,1,2]
             //if the win is an element of plays
@@ -120,18 +114,22 @@ $("document").ready(function () {
     const turn = function (cellID, player) {
         originalBoard[cellID] = player;
         $(`#${cellID}`).text(player).css("cursor", "not-allowed");
-
         let gameWon = checkWin(originalBoard, player);
         if (gameWon) gameOver(gameWon);
     };
 
     const gameOver = function (gameWon) {
-        console.log(currentPlayer);
-        const winningColor = gameWon.player === human||human2&&gameMode!=="AI" ? "#C6D8C0" : "#F63258";
+        //to color in the cells
+        let winningColor;
+        if (gameWon.player === human || gameWon.player === human2 && gameMode !== "AI") {
+            winningColor = "#C6D8C0"; //light green
+        } else {
+            winningColor = "#F63258"; //reddish
+        }
         for (let index of winningCombos[gameWon.index]) {
             $(`#${index}`).css("background-color", winningColor);
         }
-        //make each cell unclickable
+        //make each cell unclickable in case there are still empty squares
         cells.each(function () {
             $(this).off("click", turnClick).css("cursor", "not-allowed");
         });
@@ -147,6 +145,7 @@ $("document").ready(function () {
         return originalBoard.filter(square => typeof square === "number");
     };
 
+    //the algorithm the AI uses to make its moves
     const minimax = function (newBoard, player) {
         const availableSpots = emptySquares();
 
@@ -172,7 +171,6 @@ $("document").ready(function () {
             }
 
             newBoard[availableSpots[i]] = move.index;
-
             moves.push(move);
         }
 
@@ -200,22 +198,17 @@ $("document").ready(function () {
 
     const declareWinner = function (winningMessage) {
         $("h1").text(winningMessage).css("display", "block");
-        //let $newImage = $("<img>");
         let $scoreText = $("#scoreInfo").text();
         if (winningMessage === "★ Player 1 wins! ★") {
-            //$newImage.src = "/images/p1.png";
             humanNumWins++;
             $("#scoreInfo").text(`${$scoreText} P1`);
         } else if (winningMessage === "★ Player 2 wins! ★") {
-            //$newImage.src = "/images/p2.png";
             human2NumWins++;
             $("#scoreInfo").text(`${$scoreText} P2`);
         } else if (winningMessage === "★ You lose! ★") {
-            //$newImage.src = "/images/ai.png";
             AINumWins++;
             $("#scoreInfo").text(`${$scoreText} AI`);
         } else {
-            //$newImage.src = "/images/handshake.png";
             $("#scoreInfo").text(`${$scoreText} Draw`);
         }
         $("#scoreInfo").show();
@@ -223,7 +216,7 @@ $("document").ready(function () {
     };
 
     const checkTie = function () {
-        //every square filled up and no win
+        //if every square is filled up and still no win, it's a draw
         if (emptySquares().length === 0) {
             cells.each(function () {
                 $(this).css("background-color", "#3b3161");
@@ -242,18 +235,17 @@ $("document").ready(function () {
             if (gameMode === "Friend") {
                 //check for draw before play
                 if (!checkWin(originalBoard, currentPlayer) && !checkTie()) turn(cell.target.id, currentPlayer);
-                //swap players
+                //then swap players
                 currentPlayer = currentPlayer == human ? human2 : human;
             } else {
-                //turn(cell.target.id, human);
                 //check for draw before play
                 if (!checkWin(originalBoard, human) && !checkTie()) turn((minimax(originalBoard, AI).index), AI);
             }
         }
-
+        //checking for best of 3
         if (humanNumWins === 2 || human2NumWins === 2 || AINumWins === 2) {
             $("#replay").prop("disabled", true);
-            $("#scoreInfo").text("Best of 3 reached!");
+            $("#scoreInfo").css("word-spacing", "0px").text("Best of 3 reached!");
         } else {
             $("#replay").prop("disabled", false);
             $("#replay").on("click", function () {
