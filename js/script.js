@@ -157,7 +157,7 @@ $("document").ready(function () {
             return {score: 0};
         }
         const moves = [];
-        for (var i = 0; i < availableSpots.length; i++) {
+        for (let i = 0; i < availableSpots.length; i++) {
             let move = {};
             move.index = newBoard[availableSpots[i]];
             newBoard[availableSpots[i]] = player;
@@ -176,16 +176,16 @@ $("document").ready(function () {
 
         let bestMove;
         if(player === AI) {
-            var bestScore = -10000;
-            for(var i = 0; i < moves.length; i++) {
+            let bestScore = -10000;
+            for(let i = 0; i < moves.length; i++) {
                 if (moves[i].score > bestScore) {
                     bestScore = moves[i].score;
                     bestMove = i;
                 }
             }
         } else {
-            var bestScore = 10000;
-            for(var i = 0; i < moves.length; i++) {
+            let bestScore = 10000;
+            for(let i = 0; i < moves.length; i++) {
                 if (moves[i].score < bestScore) {
                     bestScore = moves[i].score;
                     bestMove = i;
