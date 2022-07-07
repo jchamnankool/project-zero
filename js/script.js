@@ -2,6 +2,8 @@ $("document").ready(function () {
     //setup -------------------------------------------------------------------------------------------------------------
     const lastGameMode = sessionStorage.getItem("lastGameMode");
     let gameMode = lastGameMode ? lastGameMode : "";
+    const totalAIAttempts = sessionStorage.getItem("totalAIAttempts");
+    let numAIAttempts = totalAIAttempts ? totalAIAttempts : 0;
 
     const showMenuItems = function () {
         //"Choose a game mode:"
@@ -22,8 +24,12 @@ $("document").ready(function () {
         startGame();
     };
     const chooseAI = function () {
-        $(".overlay").show();
-        $("#dialogConfirm").css("display", "block");
+        if (Number(numAIAttempts) === 9) {
+            egg();
+        } else {
+            $(".overlay").show();
+            $("#dialogConfirm").css("display", "block");
+        }
     };
     const playAI = function () {
         gameMode = "AI";
@@ -45,12 +51,18 @@ $("document").ready(function () {
 
     //game mode buttons
     $("#chooseFriendBtn").on("click", chooseFriend);
-    $("#chooseAIBtn").on("click", isPlayerAMasochist() ? playAI : chooseAI);
+    $("#chooseAIBtn").on("click", function () {
+        if (isPlayerAMasochist() && Number(numAIAttempts) !== 9) {
+            playAI();
+        } else {
+            chooseAI();
+        }
+    });
     //AI dialog prompt stuff => should only pop up once per session if acknowledged
     const closeDialog = function () {
         $("#dialogConfirm").css("display", "none");
         $(".overlay").hide();
-    }
+    };
     $("#sufferBtn").on("click", function () {
         //the dialog box won't pop up again next time they pick to play against the AI in the session
         sessionStorage.setItem("masochistAcknowledgment", true);
@@ -65,7 +77,7 @@ $("document").ready(function () {
     const returnHome = function () {
         sessionStorage.setItem("lastGameMode", "");
         location.reload();
-    }
+    };
     $("#return").on("click", returnHome);
     
     let originalBoard;
@@ -166,7 +178,7 @@ $("document").ready(function () {
         } else {
             declareWinner(gameWon.player === human ? "★ You win! ★" : "★ You lose! ★");
         }
-    }
+    };
 
     const emptySquares = function () {
         return originalBoard.filter(square => typeof square === "number");
@@ -221,7 +233,7 @@ $("document").ready(function () {
         }
 
         return moves[bestMove];
-    }
+    };
 
     const declareWinner = function (winningMessage) {
         $("h1").text(winningMessage).css("display", "block");
@@ -255,7 +267,20 @@ $("document").ready(function () {
         } else {
             return false;
         }
-    }
+    };
+
+    const egg = function () {
+        $(".overlay").show();
+        $(".dialog").css("padding", "24px");
+        $("#sufferBtn2").on("click", function () {
+            numAIAttempts++;
+            sessionStorage.setItem("totalAIAttempts", numAIAttempts);
+            sessionStorage.setItem("lastGameMode", "AI");
+            location.reload();
+        });
+        $("#nvmBtn2").on("click", returnHome);
+        $("#dialogTenthPlay").css("display", "block");
+    };
 
     const turnClick = function (cell) {
         if (typeof originalBoard[cell.target.id] == "number") {
@@ -274,7 +299,13 @@ $("document").ready(function () {
         //checking for best of 3
         if (humanNumWins === 2 || human2NumWins === 2 || AINumWins === 2) {
             $("#replay").text("New Game").off().on("click", function () {
-                location.reload();
+                if (Number(numAIAttempts) === 9) { //doesn't work without Number() for some reason despite being the same typeof
+                    egg();
+                } else {
+                    numAIAttempts++;
+                    sessionStorage.setItem("totalAIAttempts", numAIAttempts);
+                    location.reload();
+                }
             });
             let finalWinner;
             if (humanNumWins === 2) finalWinner = "Player 1";
