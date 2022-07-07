@@ -1,26 +1,35 @@
 $("document").ready(function () {
     //setup -------------------------------------------------------------------------------------------------------------
-    let gameMode = "";
+    const lastGameMode = sessionStorage.getItem("lastGameMode");
+    let gameMode = lastGameMode ? lastGameMode : "";
+
+    const showMenuItems = function () {
+        //"Choose a game mode:"
+        $("h2").show();
+        //two menu buttons
+        $(".gameModeBtn").css("display", "block");
+    };
+    
     const showGame = function () {
         $(".choices").hide();
         $("#board").show();
         $(".smallBtn").show();
-    }
-
+    };
+    //initial menu options
     const chooseFriend = function() {
         gameMode = "Friend";
+        sessionStorage.setItem("lastGameMode", gameMode);
         startGame();
-    }
-
+    };
     const chooseAI = function () {
         $(".overlay").show();
         $("#dialogConfirm").css("display", "block");
-    }
-
+    };
     const playAI = function () {
         gameMode = "AI";
+        sessionStorage.setItem("lastGameMode", gameMode);
         startGame();
-    }
+    };
 
     let human = "X";
     let humanNumWins = 0;
@@ -30,15 +39,21 @@ $("document").ready(function () {
     let AINumWins = 0;
     let currentPlayer = human;
 
+    const isPlayerAMasochist = function () {
+        return sessionStorage.getItem("masochistAcknowledgment");
+    }
+
     //game mode buttons
     $("#chooseFriendBtn").on("click", chooseFriend);
-    $("#chooseAIBtn").on("click", chooseAI);
-    //AI dialog prompt stuff
+    $("#chooseAIBtn").on("click", isPlayerAMasochist() ? playAI : chooseAI);
+    //AI dialog prompt stuff => should only pop up once per session if acknowledged
     const closeDialog = function () {
         $("#dialogConfirm").css("display", "none");
         $(".overlay").hide();
     }
     $("#sufferBtn").on("click", function () {
+        //the dialog box won't pop up again next time they pick to play against the AI in the session
+        sessionStorage.setItem("masochistAcknowledgment", true);
         closeDialog();
         playAI();
     });
@@ -48,6 +63,7 @@ $("document").ready(function () {
 
     //ahahaha...
     const returnHome = function () {
+        sessionStorage.setItem("lastGameMode", "");
         location.reload();
     }
     $("#return").on("click", returnHome);
@@ -90,6 +106,10 @@ $("document").ready(function () {
                 "background-color": "#231B42",
                 "cursor": "pointer"
             });
+        }).hover(function () {
+            $(this).css("background-color", "#3b3161"); //on hover
+        }, function () {
+            $(this).css("background-color", "#231B42"); //off hover
         });
     };
 
@@ -113,7 +133,11 @@ $("document").ready(function () {
     
     const turn = function (cellID, player) {
         originalBoard[cellID] = player;
-        $(`#${cellID}`).text(player).css("cursor", "not-allowed");
+        $(`#${cellID}`)
+            .text(player)
+            .unbind("mouseenter mouseleave")
+            .css("cursor", "not-allowed")
+            .css("background-color", "#231B42");
         let gameWon = checkWin(originalBoard, player);
         if (gameWon) gameOver(gameWon);
     };
@@ -131,7 +155,10 @@ $("document").ready(function () {
         }
         //make each cell unclickable in case there are still empty squares
         cells.each(function () {
-            $(this).off("click", turnClick).css("cursor", "not-allowed");
+            $(this)
+            .unbind("mouseenter mouseleave")
+            .off("click", turnClick)
+            .css("cursor", "not-allowed");
         });
 
         if (gameMode === "Friend") {
@@ -175,9 +202,9 @@ $("document").ready(function () {
         }
 
         let bestMove;
-        if(player === AI) {
+        if (player === AI) {
             let bestScore = -10000;
-            for(let i = 0; i < moves.length; i++) {
+            for (let i = 0; i < moves.length; i++) {
                 if (moves[i].score > bestScore) {
                     bestScore = moves[i].score;
                     bestMove = i;
@@ -185,7 +212,7 @@ $("document").ready(function () {
             }
         } else {
             let bestScore = 10000;
-            for(let i = 0; i < moves.length; i++) {
+            for (let i = 0; i < moves.length; i++) {
                 if (moves[i].score < bestScore) {
                     bestScore = moves[i].score;
                     bestMove = i;
@@ -219,9 +246,11 @@ $("document").ready(function () {
         //if every square is filled up and still no win, it's a draw
         if (emptySquares().length === 0) {
             cells.each(function () {
-                $(this).css("background-color", "#3b3161");
+                $(this)
+                .unbind("mouseenter mouseleave")
+                .css("background-color", "#3b3161");
             });
-            declareWinner("It's a draw!");
+            declareWinner("★ It's a draw! ★");
             return true;
         } else {
             return false;
@@ -244,28 +273,28 @@ $("document").ready(function () {
         }
         //checking for best of 3
         if (humanNumWins === 2 || human2NumWins === 2 || AINumWins === 2) {
-            $("#replay").prop("disabled", true);
-            $("#scoreInfo").css("word-spacing", "0px").text("Best of 3 reached!");
+            $("#replay").text("New Game").off().on("click", function () {
+                location.reload();
+            });
+            let finalWinner;
+            if (humanNumWins === 2) finalWinner = "Player 1";
+            if (human2NumWins === 2) finalWinner = "Player 2"; 
+            if (AINumWins === 2) finalWinner = "The AI"; 
+            $("#scoreInfo").css("word-spacing", "0px").text(`Best of 3 reached. ${finalWinner} wins!`);
         } else {
             $("#replay").prop("disabled", false);
             $("#replay").on("click", function () {
-                $("#replay").text("Replay");
+                $("#replay").text("Reset Moves");
                 startGame();
             });
         }
     };
-});
 
-/* notes
-    * the player picks a cell
-    * the cell can no longer be clicked again
-    * the cell gets added to their sequence of plays
-    * the plays get compared to the array of winning combinations
-    * 
-    * MINIMAX W/ ALPHA-BETA PRUNING:
-    *   return a value if a terminal state is found (+10, 0, -10)
-    *   go through available spots on the board
-    *   call the minimax function on each available spot through recursion
-    *   evaluate returning values from function calls
-    *   return the best value
-*/
+    //for "new games" -- thank you session storage lmao
+    if (gameMode !== "") {
+        startGame();
+    } else {
+        //menu items are initially hidden to hide flicker when you start a new game
+        showMenuItems();
+    }
+});

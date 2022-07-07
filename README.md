@@ -29,6 +29,11 @@ First, the algorithm must find what empty squares are available to play in.
 ```js
 const availableSpots = emptySquares();
 ```
+```js
+const emptySquares = function () {
+    return originalBoard.filter(square => typeof square === "number");
+};
+```
 
 The algorithm then assigns values to each square, depending on whether or not it would lead to a victory for the human player or the AI, or if it leads to a draw, then the returning value is 0.
 
@@ -74,9 +79,9 @@ In the end, the best move is returned.
 
 ```js
 let bestMove;
-if(player === AI) {
+if (player === AI) {
     let bestScore = -10000;
-    for(let i = 0; i < moves.length; i++) {
+    for (let i = 0; i < moves.length; i++) {
     if (moves[i].score > bestScore) {
         bestScore = moves[i].score;
         bestMove = i;
@@ -84,7 +89,7 @@ if(player === AI) {
     }
 } else {
     let bestScore = 10000;
-    for(let i = 0; i < moves.length; i++) {
+    for (let i = 0; i < moves.length; i++) {
         if (moves[i].score < bestScore) {
             bestScore = moves[i].score;
             bestMove = i;
