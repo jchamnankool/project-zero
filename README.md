@@ -4,18 +4,18 @@ A classic Tic-Tac-Toe game for your browser, played to a best of three whether a
 ## Usage
 You can play the game [here](https://jchamnankool.github.io/project-zero/) at any time. No installations are required.
 
-You will first be prompted to choose a game mode. If you have a friend with you, choose the "Play against a friend" option. If you'd like to try against the AI, you can choose "Suffer against the AI".
+You will first be prompted to choose a game mode. If you have someone to play with (or just want to play against yourself), you can choose the "Play against a friend" option. If you'd like to try against the AI, you can choose "Suffer against the AI".
 
 The prompt that will pop up if you choose to play against the AI is a fair warning. The AI is built using an algorithm that guarantees it will either win or draw every time. If that's your kind of thing, then this is the game mode for you.
 
-If you don't know how to play tic-tac-toe, the rules are as follows:
+If you don't know how to play Tic-Tac-Toe, the rules are as follows:
 1. Players take turns putting their marks in empty squares. 
 2. The first player to get 3 of their marks in a row (up, down, across, or diagonally) is the winner.
 3. When all 9 squares are full, the game is over.
 
-Either game mode has the exact same board layout and usage. You can simply click on the square you want to place your piece in, and then your friend or the AI will play next. Squares that have already been chosen cannot be chosen again, but you can click "Replay" to reset the board if at least one move has already been made. This will continue until a draw has been made or a winner is declared.
+Either game mode has the exact same board layout and usage. You can simply click on the square you want to place your piece in, and then your friend or the AI will play next. Squares that have already been chosen cannot be chosen again, but you can click "Reset Moves" to reset the board if at least one move has already been made. This will continue until a draw has been made or a winner is declared.
 
-After one round is completed, a score tracker will show underneath the board to see who has won which round, or if a round has ended in a draw. When a player has reached a best of three, the tracker will reflect the end of the game.
+After one round is completed, a score tracker will show underneath the board to see who has won which round, or if a round has ended in a draw. When a player has reached a best of three, the tracker will reflect the results of the game, and a "New Game" button will appear.
 
 ## How the AI works
 The AI determines its moves using a minimax algorithm with alpha-beta pruning optimization. In other words, it evaluates the board for possible future moves, and then chooses the best one for its current position.
@@ -35,7 +35,7 @@ const emptySquares = function () {
 };
 ```
 
-The algorithm then assigns values to each square, depending on whether or not it would lead to a victory for the human player or the AI, or if it leads to a draw, then the returning value is 0.
+The algorithm then assigns values to each square. If placing a piece in the square would lead to a victory for the human player, the square is assigned a score of `-10`. If it leads to victory for the AI, the square is assigned a score of `10`. Alternatively, for a draw, the square will be assigned a score of `0`.
 
 ```js
 if (checkWin(newBoard, human)) {
